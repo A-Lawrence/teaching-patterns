@@ -1,16 +1,18 @@
 <?php
 
-$URL = "https://jsonplaceholder.typicode.com/";
-
-$posts = file_get_contents($URL . "posts");
-$posts = json_decode($posts);
-$posts = array_slice($posts, 0, 10); // Limit to 10, to speed up!
-
-foreach ($posts as $post) {
-    $post->comments = json_decode(file_get_contents($URL . "posts/" . $post->id . "/comments"));
+if (!$postID = $_GET['post_id'] ?? null) {
+    header("Location: index.php");
+    exit();
 }
 
+$URL = "https://jsonplaceholder.typicode.com/";
+
+$post = file_get_contents($URL . "posts/" . $postID);
+$post = json_decode($post);
+$post->comments = json_decode(file_get_contents($URL . "posts/" . $postID . "/comments"));
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -30,17 +32,22 @@ foreach ($posts as $post) {
 <div class="jumbotron">
     <div class="container-fluid">
         <div class="row text-justify">
-            <?php foreach ($posts as $post): ?>
-                <div class="col-md-6 offset-md-3">
-                    <h4>[#<?= $post->id ?>] <?= $post->title ?></h4>
-                    <p>
-                        <?= $post->body ?>
-                    </p>
-                    <p class="text-right">
-                        <a class="btn btn-secondary" href="post.php?post_id=<?= $post->id ?>" role="button">Read
-                            more...</a>
-                    </p>
-                </div>
+            <div class="col-md-6 offset-md-3">
+                <h4>[#<?= $post->id ?>] <?= $post->title ?></h4>
+                <p>
+                    <?= $post->body ?>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row text-justify">
+        <div class="col-md-6 offset-md-3">
+            <?php foreach($post->comments as $comment): ?>
+                <p><?=$comment->body?></p>
+                <hr />
             <?php endforeach; ?>
         </div>
     </div>
