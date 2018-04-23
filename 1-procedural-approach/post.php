@@ -37,6 +37,11 @@ $post->comments = json_decode(file_get_contents($URL . "posts/" . $postID . "/co
                 <p>
                     <?= $post->body ?>
                 </p>
+                <p class="text-right">
+                    <a class="btn btn-secondary" href="index.php" role="button">
+                        Back to index
+                    </a>
+                </p>
             </div>
         </div>
     </div>
